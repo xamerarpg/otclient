@@ -57,23 +57,30 @@ jobs:
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@main
 
-      - name: Run CMake
-        uses: lukka/run-cmake@main
-        with:
-          configurePreset: ${{ matrix.buildtype }}
-          buildPreset: ${{ matrix.buildtype }}
+      # 🔧 BLOQUE CORREGIDO: reemplaza "run-cmake" que causaba errores
+      - name: Configure CMake
+        run: |
+          $buildType = if ("${{ matrix.buildtype }}" -like "*debug*") { "Debug" } else { "Release" }
+          cmake -G "Visual Studio 17 2022" -A x64 `
+            -DCMAKE_BUILD_TYPE=$buildType `
+            -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake" `
+            -B build -S .
+
+      - name: Build
+        run: |
+          $buildType = if ("${{ matrix.buildtype }}" -like "*debug*") { "Debug" } else { "Release" }
+          cmake --build build --config $buildType
 
       - name: Create and Upload Artifact (exe)
         uses: actions/upload-artifact@main
         with:
           name: otclient-${{ matrix.os }}-${{ matrix.buildtype }}-${{ github.sha }}
           path: |
-            ${{ github.workspace }}/otclient.exe
+            build/otclient.exe
 
       - name: Create and Upload Artifact (dlls)
         uses: actions/upload-artifact@main
         with:
           name: otclient-dlls-${{ matrix.os }}-${{ matrix.buildtype }}-${{ github.sha }}
           path: |
-            ${{ github.workspace }}/*.dll
-
+            build/*.dll
