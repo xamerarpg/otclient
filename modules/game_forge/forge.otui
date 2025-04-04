@@ -1,0 +1,39 @@
+ForgeWindow < MainWindow
+  id: forgeWindow
+  !text: tr("Forge System")
+  size: 250 150
+  @onEscape: hide()
+
+  ForgePanel < Panel
+    id: forgePanel
+    anchors.fill: parent
+    margin: 10
+
+    Item
+      id: itemSlot
+      anchors.left: parent.left
+      anchors.top: parent.top
+      size: 40 40
+      item-id: 2160
+
+    Label
+      id: forgeLevel
+      anchors.top: itemSlot.bottom
+      anchors.left: itemSlot.left
+      margin-top: 5
+      text: "Forge Level: 0"
+
+    Label
+      id: successChance
+      anchors.top: forgeLevel.bottom
+      anchors.left: itemSlot.left
+      margin-top: 5
+      text: "Success: 0%"
+
+    Button
+      id: forgeButton
+      anchors.right: parent.right
+      anchors.bottom: parent.bottom
+      size: 80 30
+      text: "Forge!"
+      @onClick: onForgeButtonClick()
