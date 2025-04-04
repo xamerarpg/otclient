@@ -1,0 +1,8 @@
+Module
+  name: GameForge
+  description: Forge System UI
+  author: Xameriano
+  sandboxed: true
+  scripts: [ forge.lua ]
+  interfaces: [ forge.otui ]
+  depends: [ game_interface ]
